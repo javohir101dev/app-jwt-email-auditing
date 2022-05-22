@@ -75,5 +75,15 @@ public class AuthService {
     }
 
 
-
+    public ApiResponse verifyEmail(String email, String code) {
+        Optional<User> optionalUser = userRepository.findByEmailAndCode(email, code);
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            user.setEnabled(true);
+            user.setCode(null);
+            userRepository.save(user);
+            return new ApiResponse("Your account is verified", true);
+        }
+        return new ApiResponse("Your account is active", false);
+    }
 }
