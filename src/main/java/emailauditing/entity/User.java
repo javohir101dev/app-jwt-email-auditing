@@ -1,45 +1,36 @@
-package temailauditing.entity;
+package emailauditing.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-//    From dependency javax validation
-    @Size(min = 3, max = 50)    // Will not affect to the database only for checking in java
     @Column(nullable = false, length = 50)// length for database max limit
     private String firstName;
 
-//    From org.hibernate.validator.constraints.Length;
-    @Length(min = 3, max = 50)  // Will not affect to the database only for checking in java
     @Column(nullable = false, length = 50)
     private String lastName;
 
-    @Email
     @Column(unique = true, nullable = false)
     private String email;   // this field as username
 
@@ -53,41 +44,53 @@ public class User implements UserDetails {
     @UpdateTimestamp    // automatically saves when row is updated
     private Timestamp updatedAt;
 
+    @ManyToMany
+    private Set<Role> roles;
+
+    private boolean accountNonExpired = true;
+
+    private boolean accountNonLocked = true;
+
+    private boolean credentialsNonExpired = true;
+
+    private boolean enabled = false;  // will be true after email is confirmed
+    // that will prevent from face users and bots
+
+    private String code; // for email code
 
 //    Methods of UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.roles;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
-
 
     @Override
     public String getUsername() {
-        return email;
+        return this.email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return this.accountNonExpired ;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return this.accountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return this.credentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return this.enabled;
     }
 }
