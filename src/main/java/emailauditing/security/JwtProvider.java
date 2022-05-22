@@ -26,6 +26,22 @@ public class JwtProvider {
         return generatedToken;
     }
 
+    public String getEmailFromToken(String token) {
+        try {
+            String email = Jwts
+                    .parser()
+                    .setSigningKey(secretWord)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+            return email;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 
 
 }

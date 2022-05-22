@@ -44,7 +44,7 @@ public class User implements UserDetails {
     @UpdateTimestamp    // automatically saves when row is updated
     private Timestamp updatedAt;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     private boolean accountNonExpired = true;
