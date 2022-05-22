@@ -44,7 +44,7 @@ public class AuthService {
         user.setLastName(registerDto.getLastName());
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        user.setRoles(Set.of(roleRepository.findByRoleName(RoleName.ROLE_USER)));
+        user.setRoles(Collections.singleton(roleRepository.findByRoleName(RoleName.ROLE_USER)));
 
         user.setCode(UUID.randomUUID().toString());
 
@@ -61,7 +61,7 @@ public class AuthService {
     public Boolean sendEmail(String sendingEmail, String code){
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("mailsender1java"); // email sending accant
+            message.setFrom("mailsender1java@gmail.com"); // email sending accant
             message.setTo(sendingEmail);  // email receiving account
             message.setSubject("Confirm your account");  // Subject of email message
             message.setText("<a href='http://localhost:8080/api/auth/veriftEmail?code="
