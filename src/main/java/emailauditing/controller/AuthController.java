@@ -1,5 +1,6 @@
 package emailauditing.controller;
 
+import emailauditing.payload.LoginDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,12 @@ public class AuthController {
     public HttpEntity<?> verifyEmail(@RequestParam String email, @RequestParam String code){
         ApiResponse apiResponse = authService.verifyEmail(email, code);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @PostMapping("/login")
+    public HttpEntity<?> login(@RequestBody LoginDto loginDto){
+        ApiResponse apiResponse = authService.login(loginDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 401).body(apiResponse);
     }
 
 }
